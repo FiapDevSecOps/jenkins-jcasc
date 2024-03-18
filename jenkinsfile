@@ -8,17 +8,17 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'your_branch', credentialsId: 'your_ssh_key_credentials', url: 'git@github.com:your_username/your_repository.git'
+                git branch: 'your_branch', credentialsId: 'github', url: 'git@github.com:FiapDevSecOps/jenkins-jcasc.git'
             }
         }
 
-        stage('Build and Test') {
+        stage('Build Master') {
             steps {
                 // Add your build and test steps here
             }
         }
 
-        stage('Deploy') {
+        stage('Push Master') {
             steps {
                 // Add deployment steps here
             }
