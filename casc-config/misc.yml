@@ -1,0 +1,15 @@
+unclassified:
+  location:
+    url: http://localhost
+    adminAddress: support@fiap.local
+  
+  globalLibraries:
+    libraries:
+      - name: "jenkins-shared@master"
+        implicit: true
+        defaultVersion: "master"
+        retriever:
+          modernSCM:
+            scm:
+              git:
+                remote: "https://github.com/rosthanlinux/shared-pipeline.git"

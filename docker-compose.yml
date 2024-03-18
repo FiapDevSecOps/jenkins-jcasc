@@ -1,0 +1,90 @@
+version: "3.5"
+# See https://docs.docker.com/compose/overview/ for more information.
+
+# If you make changes to this file or any related files, apply them by
+# navigating to the directory that holds this file and run this as root:
+#   docker-compose down; docker-compose up -d
+
+# Create two networks: one for front-end containers that we'll make
+# publicly accessible to the internet, and one for private back-end.
+networks:
+  jenkins-net:
+
+services:
+  nginx:
+    image: nginx:stable
+    container_name: nginx-proxy
+    user: root
+    networks:
+      - jenkins-net
+    ports:
+      - '80:80'
+    volumes:
+      - '/var/log/nginx/jenkins'
+      - './jenkins.conf:/etc/nginx/conf.d/default.conf'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+
+  jenkins:
+    container_name: jenkins-master
+    build:
+      context: .
+      dockerfile: Dockerfile.master
+    ports:
+      - 8080:8080
+      - 50000:5000
+    volumes:
+      - ./keys:/var/jenkins_home/.ssh
+      - jenkins_home:/var/jenkins_home
+      - ./casc-config/all:/var/jenkins_config
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_config
+    networks:
+      - jenkins-net
+    secrets:
+      - adminpw
+      - ssh-pub-key
+      - ssh-priv-key
+    labels:
+      # Explicitly tell Traefik to expose this container
+      - "traefik.enable=true"
+      # Allow request only from the predefined entry point named "web"
+      - "traefik.http.routers.jenkins.entrypoints=web"
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.fiap.local`)"
+      - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
+
+  patati:
+    expose: 
+      - 22
+    container_name: agent-patati
+    build:
+      context: .
+      dockerfile: Dockerfile.ssh.agent
+    volumes:
+      - ./keys:/var/lib/jenkins/.ssh
+    networks:
+      - jenkins-net
+
+  patata:
+    expose: 
+      - 22
+    container_name: agent-patata
+    build:
+      context: .
+      dockerfile: Dockerfile.ssh.agent
+    volumes:
+      - ./keys:/var/lib/jenkins/.ssh
+    networks:
+      - jenkins-net
+
+secrets:
+  adminpw:
+    file: ./secret/admin.txt
+  ssh-priv-key:
+    file: ./keys/id_rsa
+  ssh-pub-key:
+    file: ./keys/id_rsa.pub
+  github-ssh-key:
+    file: ~/.ssh/id_rsa
+# make another jenkins instance, and connect this
+volumes:
+  jenkins_home:

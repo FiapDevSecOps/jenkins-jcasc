@@ -1,0 +1,66 @@
+jenkins:
+  systemMessage: "\n\nDemo setup for Jenkins Configuration as Code plugin......\n\n"
+
+  numExecutors: 1
+  mode: NORMAL
+  scmCheckoutRetryCount: 3
+  labelString: "master-label"  
+
+  # nodes:
+  #   - permanent:
+  #       labelString: "linux docker test"
+  #       mode: NORMAL
+  #       name: "utility-node-2"
+  #       numExecutors: 4
+  #       remoteFS: "/home/user2"
+  #       launcher:
+  #         SSHLauncher:
+  #           host: "patati"
+  #           port: 22
+  #           credentialsId: test
+  #           launchTimeoutSeconds: 60
+  #           maxNumRetries: 3
+  #           retryWaitTime: 30
+  #           sshHostKeyVerificationStrategy:
+  #             manuallyTrustedKeyVerificationStrategy:
+  #               requireInitialManualTrust: false
+
+
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+       - id: admin
+         password: ${adminpw:-passw0rd}
+
+  authorizationStrategy:
+    globalMatrix:
+      grantedPermissions:
+        - "Overall/Read:anonymous"
+        - "Job/Read:anonymous"
+        - "View/Read:anonymous"
+        - "Overall/Administer:anonymous"
+
+  crumbIssuer: "standard"
+
+  remotingSecurity:
+    enabled: true    
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+        - usernamePassword:
+            scope:    GLOBAL
+            id:       github-user
+            username: ewelina
+            password: ${github:-githubPassw0rd}
+            description: github username/password  
+
+tool:
+  git:
+    installations:
+      - name: Default
+        home: "git"
+

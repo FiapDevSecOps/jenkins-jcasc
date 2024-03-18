@@ -1,0 +1,25 @@
+jobs:
+  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/configuration-as-code-dsl/pipeline.dsl #casc
+ # - file: /var/jenkins_conf/jobs.groovy
+  - script: >
+      job('123456')
+  - script: >
+      multibranchPipelineJob('jenkins Java Pipeline') {
+        branchSources {
+          github {
+            // The id option in the Git and GitHub branch source contexts is now mandatory (JENKINS-43693).
+            id('12312313') // IMPORTANT: use a constant and unique identifier
+            scanCredentialsId('github')
+            repoOwner('rosthanlinux')
+            repository('simple-java-app')
+          }
+        }
+        orphanedItemStrategy {
+          discardOldItems {
+            numToKeep(1)
+          }
+        }
+        triggers {
+          periodic(5)
+        }
+      }

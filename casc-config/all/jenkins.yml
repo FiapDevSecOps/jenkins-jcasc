@@ -1,0 +1,38 @@
+jenkins:
+  agentProtocols:
+  - "JNLP4-connect"
+  - "Ping"
+  crumbIssuer:
+    standard:
+      excludeClientIPFromCrumb: false
+  disableRememberMe: false
+  labelAtoms:
+  - name: "built-in"
+  - name: "docker"
+  - name: "patati"
+
+  nodes:
+  - permanent:
+      labelString: "docker"
+      launcher:
+        ssh:
+          credentialsId: "ssh-priv-key"
+          host: "patati"
+          port: 22
+          sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+      name: "patati"
+      numExecutors: 6
+      remoteFS: "/tmp"
+      retentionStrategy: "always"
+  - permanent:
+      labelString: "docker"
+      launcher:
+        ssh:
+          credentialsId: "ssh-priv-key"
+          host: "patata"
+          port: 22
+          sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+      name: "patata"
+      numExecutors: 6
+      remoteFS: "/tmp"
+      retentionStrategy: "always"

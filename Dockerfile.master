@@ -1,0 +1,19 @@
+FROM jenkins/jenkins:alpine3.19-jdk21
+
+ENV JENKINS_USER admin
+ENV JENKINS_PASS admin
+
+# Skip initial setup
+ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
+
+
+COPY --chown=jenkins:jenkins plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
+RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+
+USER root
+RUN apk add docker
+RUN apk add py-pip
+
+USER jenkins
