@@ -36,6 +36,7 @@ services:
       - ./keys:/var/jenkins_home/.ssh
       - jenkins_home:/var/jenkins_home
       - ./casc-config/all:/var/jenkins_config
+      - '/var/run/docker.sock:/var/run/docker.sock'
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_config
     networks:
@@ -61,6 +62,7 @@ services:
       dockerfile: Dockerfile.ssh.agent
     volumes:
       - ./keys:/var/lib/jenkins/.ssh
+      - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - jenkins-net
 
@@ -73,12 +75,17 @@ services:
       dockerfile: Dockerfile.ssh.agent
     volumes:
       - ./keys:/var/lib/jenkins/.ssh
+      - '/var/run/docker.sock:/var/run/docker.sock'
     networks:
       - jenkins-net
 
 secrets:
   adminpw:
     file: ./secret/admin.txt
+  docker-hub-token:
+    file: ./secret/docker-hub-token.txt
+  git-hub-token:
+    file: ./secret/git-hub-token.txt
   ssh-priv-key:
     file: ./keys/id_rsa
   ssh-pub-key:
