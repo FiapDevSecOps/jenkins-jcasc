@@ -14,12 +14,14 @@ pipeline {
 
         stage('Build Master') {
             steps {
+                echo ok
                 // Add your build and test steps here
             }
         }
 
         stage('Push Master') {
             steps {
+                echo ok
                 // Add deployment steps here
             }
         }
