@@ -6,7 +6,7 @@ ENV JAVA_PATH "/usr/local/openjdk-8/bin"
 
 # TODO delete package list
 RUN apt-get update && \
-    apt-get install -y openssh-server
+    apt-get install -y openssh-server maven
 
 RUN RUN curl -fsSL https://get.docker.com | sh
 
@@ -17,7 +17,7 @@ RUN mkdir -p /var/lib/jenkins/.ssh
 
 RUN chown -R jenkins: /var/lib/jenkins/
 
-RUN ln -s /usr/local/openjdk-11/bin/java /usr/bin/java 
+#RUN ln -s /usr/local/openjdk-11/bin/java /usr/bin/java 
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd", "-D"]

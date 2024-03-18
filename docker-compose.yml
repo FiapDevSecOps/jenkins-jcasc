@@ -87,4 +87,4 @@ secrets:
     file: ~/.ssh/id_rsa
 # make another jenkins instance, and connect this
 volumes:
-  jenkins_home:
+   jenkins_home:

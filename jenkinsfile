@@ -1,0 +1,42 @@
+pipeline {
+  environment {
+    registry = 'rosthan/jenkins-master'
+    registryCredential = 'ssh-github-key'
+    dockerImage = ''
+  }
+
+  agent any
+  stages {
+    stage('Cloning our Git') {
+      steps {
+        git branch: 'main', credentialsId: 'ssh-github-key', url: 'git@github.com:rosthan/jenkins-jcasc.git'
+      }
+    }
+
+    stage('Building Docker Image') {
+      steps {
+        script {
+          withCredentials([string(credentialsId: 'PORT', variable: 'PORT')]) {
+            dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg PORT=$PORT .")
+          }
+        }
+      }
+    }
+
+    stage('Deploying Docker Image to Dockerhub') {
+      steps {
+        script {
+          docker.withRegistry('', registryCredential) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+
+    stage('Cleaning Up') {
+      steps {
+        sh "docker rmi --force $registry:$BUILD_NUMBER"
+      }
+    }
+  }
+}

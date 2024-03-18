@@ -54,8 +54,8 @@ credentials:
         - usernamePassword:
             scope:    GLOBAL
             id:       github-user
-            username: ewelina
-            password: ${github:-githubPassw0rd}
+            username: rosthan
+            password: ${github:-github}
             description: github username/password  
 
 tool:
