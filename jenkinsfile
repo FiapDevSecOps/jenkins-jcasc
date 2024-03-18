@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = 'rosthan/jenkins-master'
-    registryCredential = 'ssh-github-key'
+    registryCredential = 'jenkins-ssh-github'
     dockerImage = ''
   }
 
@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Cloning our Git') {
       steps {
-        git branch: 'main', credentialsId: 'ssh-github-key', url: 'git@github.com:rosthan/jenkins-jcasc.git'
+        git branch: 'main', credentialsId: 'jenkins-ssh-github', url: 'git@github.com:rosthan/jenkins-jcasc.git'
       }
     }
 
