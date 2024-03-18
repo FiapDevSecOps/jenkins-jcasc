@@ -6,13 +6,15 @@ ENV JAVA_PATH "/usr/local/openjdk-8/bin"
 
 # TODO delete package list
 RUN apt-get update && \
-    apt-get install -y openssh-server maven
+    apt-get install -y openssh-server maven passwd
 
 RUN curl -fsSL https://get.docker.com | sh
 
 RUN mkdir /var/run/sshd
 
-RUN useradd -d /var/lib/jenkins jenkins
+RUN useradd -d /var/lib/jenkins jenkins 
+RUN usermod -aG docker jenkins 
+RUN newgrp docker
 RUN mkdir -p /var/lib/jenkins/.ssh
 
 RUN chown -R jenkins: /var/lib/jenkins/

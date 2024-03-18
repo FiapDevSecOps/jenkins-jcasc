@@ -22,7 +22,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'HUB_USER', passwordVariable: 'HUB_TOKEN')]) {                      
                     sh '''
                         docker login -u $HUB_USER -p $HUB_TOKEN 
-                        docker build -t ${USER}/${CONTAINER}:${TAG} -t ${USER}/${CONTAINER}:latest. -f ${DOCKERFILE_PATH}
+                        docker build -t ${USER}/${CONTAINER}:${TAG} -t ${USER}/${CONTAINER}:latest . -f ${DOCKERFILE_PATH}
                         docker push ${USER}/${CONTAINER}:${TAG}
                     '''
                 }
@@ -36,7 +36,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'HUB_USER', passwordVariable: 'HUB_TOKEN')]) {                      
                     sh '''
                         docker login -u $HUB_USER -p $HUB_TOKEN 
-                        docker build -t ${USER}/jenkins-ssh:${TAG} -t ${USER}/jenkins-ssh:latest. -f Dockerfile.ssh.agent
+                        docker build -t ${USER}/jenkins-ssh:${TAG} -t ${USER}/jenkins-ssh:latest . -f Dockerfile.ssh.agent
                         docker push ${USER}/${CONTAINER}:${TAG}
                     '''
                 }
