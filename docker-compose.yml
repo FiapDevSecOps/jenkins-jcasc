@@ -37,6 +37,10 @@ services:
       - jenkins_home:/var/jenkins_home
       - ./casc-config/all:/var/jenkins_config
       - '/var/run/docker.sock:/var/run/docker.sock'
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+      - 192.168.9.45
     environment:
       - CASC_JENKINS_CONFIG=/var/jenkins_config
     networks:
@@ -65,7 +69,13 @@ services:
       dockerfile: Dockerfile.ssh.agent
     volumes:
       - ./keys:/var/lib/jenkins/.ssh
+      - /tmp/jenkins:/home/jenkins
       - '/var/run/docker.sock:/var/run/docker.sock'
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+      - 192.168.9.45
+    
     networks:
       - jenkins-net
 
@@ -78,7 +88,13 @@ services:
       dockerfile: Dockerfile.ssh.agent
     volumes:
       - ./keys:/var/lib/jenkins/.ssh
+      - /tmp/jenkins:/home/jenkins
       - '/var/run/docker.sock:/var/run/docker.sock'
+    dns:
+      - 8.8.8.8
+      - 4.4.4.4
+      - 192.168.9.45
+    
     networks:
       - jenkins-net
 
