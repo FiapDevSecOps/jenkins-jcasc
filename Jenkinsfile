@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github', url: 'git@github.com:FiapDevSecOps/jenkins-jcasc.git'
+                git branch: 'main', url: 'https://github.com/FiapDevSecOps/jenkins-jcasc.git'
             }
         }
 

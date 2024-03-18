@@ -45,6 +45,9 @@ services:
       - adminpw
       - ssh-pub-key
       - ssh-priv-key
+      - git-hub-token
+      - docker-hub-token
+      - github-ssh-key
     labels:
       # Explicitly tell Traefik to expose this container
       - "traefik.enable=true"
