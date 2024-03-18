@@ -3,70 +3,46 @@ pipeline {
 
     environment {
         GIT_SSH_COMMAND = 'ssh -o StrictHostKeyChecking=no' // Skip host key checking
+        CONTAINER = 'jenkins-master'
+        USER = 'rosthan'
+        TAG = 'v1'
+        DOCKERFILE_PATH = 'Dockerfile.master'
+
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'your_branch', credentialsId: 'github', url: 'git@github.com:FiapDevSecOps/jenkins-jcasc.git'
+                git branch: 'main', credentialsId: 'github', url: 'git@github.com:FiapDevSecOps/jenkins-jcasc.git'
             }
         }
 
-        stage('Build Master') {
+        stage('Jenkins Master - Build e Push') {
             steps {
-                echo ok
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'HUB_USER', passwordVariable: 'HUB_TOKEN')]) {                      
+                    sh '''
+                        docker login -u $HUB_USER -p $HUB_TOKEN 
+                        docker build -t ${USER}/${CONTAINER}:${TAG} -t ${USER}/${CONTAINER}:latest. -f ${DOCKERFILE_PATH}
+                        docker push ${USER}/${CONTAINER}:${TAG}
+                    '''
+                }
+                
                 // Add your build and test steps here
             }
         }
 
-        stage('Push Master') {
+           stage('Jenkins Slaves - Build e Push') {
             steps {
-                echo ok
-                // Add deployment steps here
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'HUB_USER', passwordVariable: 'HUB_TOKEN')]) {                      
+                    sh '''
+                        docker login -u $HUB_USER -p $HUB_TOKEN 
+                        docker build -t ${USER}/jenkins-ssh:${TAG} -t ${USER}/jenkins-ssh:latest. -f Dockerfile.ssh.agent
+                        docker push ${USER}/${CONTAINER}:${TAG}
+                    '''
+                }
+                
+                // Add your build and test steps here
             }
         }
     }
 }
-
-// pipeline {
-//   environment {
-//     registry = 'rosthan/jenkins-master'
-//     registryCredential = 'jenkins-ssh-github'
-//     dockerImage = ''
-//   }
-
-//   agent any
-//   stages {
-//     stage('Cloning our Git') {
-//       steps {
-//         git branch: 'main', credentialsId: 'jenkins-ssh-github', url: 'git@github.com:rosthan/jenkins-jcasc.git'
-//       }
-//     }
-
-//     stage('Building Docker Image') {
-//       steps {
-//         script {
-//           withCredentials([string(credentialsId: 'PORT', variable: 'PORT')]) {
-//             dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg PORT=$PORT .")
-//           }
-//         }
-//       }
-//     }
-
-//     stage('Deploying Docker Image to Dockerhub') {
-//       steps {
-//         script {
-//           docker.withRegistry('', registryCredential) {
-//             dockerImage.push()
-//           }
-//         }
-//       }
-//     }
-
-//     stage('Cleaning Up') {
-//       steps {
-//         sh "docker rmi --force $registry:$BUILD_NUMBER"
-//       }
-//     }
-//   }
-// }
