@@ -52,6 +52,9 @@ services:
       - git-hub-token
       - docker-hub-token
       - github-ssh-key
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_SESSION_TOKEN
     labels:
       # Explicitly tell Traefik to expose this container
       - "traefik.enable=true"
@@ -111,6 +114,13 @@ secrets:
     file: ./keys/id_rsa.pub
   github-ssh-key:
     file: ~/.ssh/id_rsa
+  AWS_ACCESS_KEY_ID:
+    file: secret/AWS_ACCESS_KEY_ID.txt
+  AWS_SECRET_ACCESS_KEY:
+    file: secret/AWS_SECRET_ACCESS_KEY.txt
+  AWS_SESSION_TOKEN:
+    file: secret/AWS_SESSION_TOKEN.txt
+
 # make another jenkins instance, and connect this
 volumes:
    jenkins_home:
